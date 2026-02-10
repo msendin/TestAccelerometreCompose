@@ -1,6 +1,7 @@
 package com.example.testaccelerometrecompose
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.compose.ui.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -24,6 +25,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.testaccelerometrecompose.ui.theme.TestAccelerometreComposeTheme
 
@@ -107,13 +109,23 @@ fun SensorsInfo(color: MutableState<Boolean> ) {
         elevation = CardDefaults.cardElevation(),
         border = BorderStroke(10.dp, if (color.value) Color.Black else Color.LightGray)
     ) {
-        Column() {
+        Column {
             Text(text = "")
-            Row() {
+            Text(text = "")
+            Row {
                 Text(text = "            ")
                 Text(text = stringResource(R.string.shake))
             }
         }
+    }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Preview(showBackground = true, widthDp = 360, heightDp = 640, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SensorsInfoPreview() {
+    TestAccelerometreComposeTheme {
+        SensorsInfo(mutableStateOf(false))
     }
 }
 
