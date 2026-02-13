@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.testaccelerometrecompose.ui.theme.TestAccelerometreComposeTheme
+import kotlin.math.sqrt
 
 class MainActivity : ComponentActivity(), SensorEventListener {
 
@@ -36,16 +37,16 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     private var color : MutableState<Boolean> = mutableStateOf(false)
 
-        @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-        override fun onCreate(savedInstanceState: Bundle?) {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         sensorManager.registerListener(
-                this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL
-            )
+            this,
+            sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
         // register this class as a listener for the accelerometer sensor
         lastUpdate = System.currentTimeMillis()
 
@@ -73,18 +74,21 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     }
 
     private fun getAccelerometer(event: SensorEvent) {
-        val accelerationSquareRootThreshold = 200
-        val timeThreashold = 1000
+        // Umbral ajustado: 2.5 significa una aceleración de 1.5 veces la gravedad terrestre
+        val accelerationThreshold = 1.5f
+        val timeThreshold = 1000
         val values = event.values
 
         val x = values[0]
         val y = values[1]
         val z = values[2]
-        val accelerationSquareRoot = (x * x + y * y + z * z
-                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH))
+
+        // Cálculo de la magnitud del vector aceleración normalizado por la gravedad
+        val currentAcceleration = sqrt(x * x + y * y + z * z) / SensorManager.GRAVITY_EARTH
+
         val actualTime = System.currentTimeMillis()
-        if (accelerationSquareRoot >= accelerationSquareRootThreshold) {
-            if (actualTime - lastUpdate < timeThreashold) {
+        if (currentAcceleration >= accelerationThreshold) {
+            if (actualTime - lastUpdate < timeThreshold) {
                 return
             }
             lastUpdate = actualTime
@@ -128,4 +132,3 @@ fun SensorsInfoPreview() {
         SensorsInfo(mutableStateOf(false))
     }
 }
-
