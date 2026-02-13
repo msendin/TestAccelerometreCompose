@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     }
 
     private fun getAccelerometer(event: SensorEvent) {
-        // Umbral ajustado: 2.5 significa una aceleración de 1.5 veces la gravedad terrestre
+        // Adjusted threshold : 2.5 means an acceleration of 1.5 times Earth's gravity
         val accelerationThreshold = 1.5f
         val timeThreshold = 1000
         val values = event.values
@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         val y = values[1]
         val z = values[2]
 
-        // Cálculo de la magnitud del vector aceleración normalizado por la gravedad
+        // Calculation of the magnitude of the acceleration vector normalized by gravity
         val currentAcceleration = sqrt(x * x + y * y + z * z) / SensorManager.GRAVITY_EARTH
 
         val actualTime = System.currentTimeMillis()
